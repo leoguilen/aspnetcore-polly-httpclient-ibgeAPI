@@ -35,12 +35,14 @@ namespace IbgeService.Controllers
         /// </summary>
         /// <response code="200">Retornado lista com frequencias do nome especificado</response>
         /// <response code="500">Um erro ocorreu ao retornar lista com frequencias do nome especificado</response>
+        /// <param name="nomes">Um ou mais nomes para pesquisa. Ex: (joao ou joao,maria)</param>
+        /// <param name="queryParameters">Paramêtros opcionais para filtro da pesquisa</param>
         [HttpGet("v1/frequencia/{nomes}")]
         public async Task<IActionResult> GetFrequentesPorNomes([FromRoute] string nomes, [FromQuery] QueryParameters queryParameters)
         {
             var nomesSplit = nomes.Split(",");
 
-            if(nomesSplit.Length > 1)
+            if (nomesSplit.Length > 1)
             {
                 var resultNomes = await _service.GetFrequenciaNomesAsync(nomesSplit);
                 return Ok(resultNomes);
@@ -55,6 +57,7 @@ namespace IbgeService.Controllers
         /// </summary>
         /// <response code="200">Retornado lista com ranking de nomes mais frequentes</response>
         /// <response code="500">Um erro ocorreu ao retornar lista com ranking de nomes mais frequentes</response>
+        /// <param name="queryParameters">Paramêtros opcionais para filtro da pesquisa</param>
         [HttpGet("v1/ranking")]
         public async Task<IActionResult> GetRanking([FromQuery] QueryParameters queryParameters)
         {

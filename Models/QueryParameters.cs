@@ -6,7 +6,7 @@ namespace IbgeService.Models
     {
         public string Sexo { get; set; }
         public string Localidade { get; set; }
-        
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Decada { get; set; }
     }

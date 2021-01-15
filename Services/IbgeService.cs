@@ -3,6 +3,7 @@ using IbgeService.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -24,9 +25,9 @@ namespace IbgeService.Services
         {
             try
             {
-                FrequenciaNomeModel frequenciaNome;
+                FrequenciaNomeModel[] frequenciaNome;
 
-                _logger.LogInformation("Enviando solicitação ({0}) para obter listagem com frequência de nascimentos por década do nome {1}", _client.BaseAddress, nome);
+                _logger.LogInformation("Enviando solicitação para obter listagem com frequência de nascimentos por década do nome {0}", nome);
 
                 if (!(queryParameters.Sexo is null && queryParameters.Localidade is null))
                 {
@@ -36,17 +37,17 @@ namespace IbgeService.Services
                         .Build();
 
                     frequenciaNome = await _client
-                        .GetFromJsonAsync<FrequenciaNomeModel>($"censos/nomes/{nome}{query}");
+                        .GetFromJsonAsync<FrequenciaNomeModel[]>($"censos/nomes/{nome}{query}");
 
                     _logger.LogInformation("Solicitação processada com êxito.");
-                    return frequenciaNome;
+                    return frequenciaNome.FirstOrDefault();
                 }
 
                 frequenciaNome = await _client
-                    .GetFromJsonAsync<FrequenciaNomeModel>($"censos/nomes/{nome}");
+                    .GetFromJsonAsync<FrequenciaNomeModel[]>($"censos/nomes/{nome}");
 
                 _logger.LogInformation("Solicitação processada com êxito.");
-                return frequenciaNome;
+                return frequenciaNome.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -63,7 +64,7 @@ namespace IbgeService.Services
         {
             try
             {
-                _logger.LogInformation("Enviando solicitação ({0}) para obter listagem com frequência de nascimentos por década", _client.BaseAddress);
+                _logger.LogInformation("Enviando solicitação para obter listagem com frequência de nascimentos por década");
 
                 var frequenciaNomes = await _client
                     .GetFromJsonAsync<IReadOnlyList<NomeModel>>("censos/nomes");
@@ -87,7 +88,7 @@ namespace IbgeService.Services
         {
             try
             {
-                _logger.LogInformation("Enviando solicitação ({0}) para obter listagem com frequência de nascimentos por década dos nomes {0}", _client.BaseAddress, string.Join(",", nomes));
+                _logger.LogInformation("Enviando solicitação para obter listagem com frequência de nascimentos por década dos nomes {0}", string.Join(",", nomes));
 
                 var frequenciaNomes = await _client
                     .GetFromJsonAsync<IReadOnlyList<FrequenciaNomeModel>>($"censos/nomes/{string.Join("|", nomes)}");
@@ -111,12 +112,12 @@ namespace IbgeService.Services
         {
             try
             {
-                RankingNomeModel rankingNome;
+                RankingNomeModel[] rankingNome;
 
-                _logger.LogInformation("Enviando solicitação ({0}) para obter listagem com ranking de nascimentos por década", _client.BaseAddress);
+                _logger.LogInformation("Enviando solicitação para obter listagem com ranking de nascimentos por década");
 
-                if (!(queryParameters.Sexo is null 
-                    && queryParameters.Localidade is null 
+                if (!(queryParameters.Sexo is null
+                    && queryParameters.Localidade is null
                     && queryParameters.Decada is null))
                 {
                     var query = new QueryParametersBuilder()
@@ -126,17 +127,17 @@ namespace IbgeService.Services
                         .Build();
 
                     rankingNome = await _client
-                        .GetFromJsonAsync<RankingNomeModel>($"censos/nomes/ranking{query}");
+                        .GetFromJsonAsync<RankingNomeModel[]>($"censos/nomes/ranking{query}");
 
                     _logger.LogInformation("Solicitação processada com êxito.");
-                    return rankingNome;
+                    return rankingNome.FirstOrDefault();
                 }
 
                 rankingNome = await _client
-                    .GetFromJsonAsync<RankingNomeModel>($"censos/nomes/ranking");
+                    .GetFromJsonAsync<RankingNomeModel[]>($"censos/nomes/ranking");
 
                 _logger.LogInformation("Solicitação processada com êxito.");
-                return rankingNome;
+                return rankingNome.FirstOrDefault();
             }
             catch (Exception ex)
             {

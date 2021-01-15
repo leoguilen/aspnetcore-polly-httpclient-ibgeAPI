@@ -20,6 +20,16 @@ namespace IbgeService
                     loggingBuilder.AddConfiguration(hostBuilder.Configuration.GetSection("Logging"));
                     loggingBuilder.AddConsole(options => options.IncludeScopes = true);
                 })
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    var env = hostingContext.HostingEnvironment;
+
+                    if (env.IsProduction())
+                    {
+                        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                        config.AddEnvironmentVariables();
+                    }
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

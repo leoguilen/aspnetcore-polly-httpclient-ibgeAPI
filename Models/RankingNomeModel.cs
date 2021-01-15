@@ -12,6 +12,6 @@ namespace IbgeService.Models
         public string Sexo { get; set; }
 
         [JsonPropertyName("res")]
-        public ICollection<ResultadoRankingNomeModel> Dados { get; set; }
+        public List<ResultadoRankingNomeModel> Dados { get; set; }
     }
 }
